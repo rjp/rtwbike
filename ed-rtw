@@ -1,0 +1,74 @@
+#! /bin/bash
+
+set -x
+set -e
+
+bd=~/tmp/rtwbike
+html=~/www/live/coding/experiments/rtwbike/
+
+cd $bd
+
+# Fetch the tweets into our text file
+twitter-archiver -o -s $bd @rtwbike
+
+# Insert the tweets into the database
+python $bd/tweets-to-db.py $bd/distances.db $bd/@rtwbike
+
+# Now we convert the tweets to distances
+python $bd/update-distances.py $bd/distances.db
+
+# Output the tweets as JSON
+python $bd/db-to-json.py $bd/distances.db $bd/distances.json.new && mv -f $bd/distances.json.new $html/distances.json
+
+(echo; date +'%s %c'; sqlite3 $bd/distances.db 'select distance from distances' | python ~/eddington.py) >> $bd/check.log 2>>$HOME/logs/ed-rtw.err
+
+tail -5 $bd/check.log | mail -r role@rjp.is -s 'Eddington RTW' zimpenfish@gmail.com
+
+# SHENANIGANS
+a="$IFS";IFS=$'\n';set -- $(tail -4 $bd/check.log);IFS="$a"
+
+when=$1
+distances=$2
+edi=$3
+
+# Make sure we have a number for comparison
+if [ ! -s $bd/edi ]; then echo 0 > $bd/edi; fi
+
+echo reading
+
+datenow=$(date +%Y-%m-%d_%H:%M:%S)
+
+f=$(sed -e "s/@DISTANCES@/$distances/" -e "s/@DATE@/$datenow/" <<FOOTERTEXT
+#rtwbike #eddington
+@DISTANCES@
+Date: @DATE@
+FOOTERTEXT
+)
+
+if [ "$NOTWEET" ]; then
+	cat <<FFI
+Eddington for @rtwbike is $edi
+
+$f
+FFI
+	exit
+fi
+
+echo $edi > $bd/edi.new
+if ! diff -q $bd/edi $bd/edi.new; then
+	/home/rjp/bin/bashtweet.sh <<NEWTEXT
+New Eddington for @rtwbike is $edi
+
+$f
+NEWTEXT
+	echo "New Eddington for @rtwbike is $edi\n\n$f"
+	mv -f $bd/edi.new $bd/edi
+else
+	/home/rjp/bin/bashtweet.sh <<SAMETEXT
+Eddington for @rtwbike stays at $edi
+
+$f
+SAMETEXT
+	echo -e "Eddington for @rtwbike stays at $edi\n\n$f"
+	rm -f $bd/edi.new
+fi
