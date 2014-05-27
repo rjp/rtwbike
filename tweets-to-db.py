@@ -10,7 +10,7 @@ tweets = sys.argv[2]
 conn = sqlite3.connect(dbfile)
 c = conn.cursor()
 
-with open(tweets) as file:
+with open(tweets, encoding="utf-8") as file:
     print(file)
     for line in file:
         print(line.split(' ', 5))
