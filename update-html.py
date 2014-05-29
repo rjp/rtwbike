@@ -1,11 +1,18 @@
 import sys
 from bs4 import BeautifulSoup
 import copy
+import sqlite3
 
 # https://twitter.com/RTWbike/status/464626734521135105
 
 (me, dbfile, input_html) = sys.argv
 output_html = input_html + ".new"
+
+conn = sqlite3.connect(dbfile)
+c = conn.cursor()
+c.execute("select date, distance, tweet_id  from distances")
+distances = c.fetchall()
+conn.close()
 
 with open(input_html) as file:
     soup = BeautifulSoup(file.read())
