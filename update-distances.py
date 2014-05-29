@@ -5,6 +5,9 @@ import sys
 import os
 import json
 import re
+import codecs
+
+sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
 
 dbfile = sys.argv[1]
 

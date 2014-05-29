@@ -3,6 +3,10 @@
 import sqlite3
 import sys
 import os
+import sys
+import codecs
+
+sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
 
 dbfile = sys.argv[1]
 tweets = sys.argv[2]
