@@ -14,16 +14,21 @@ c.execute("select date, distance, tweet_id  from distances")
 distances = c.fetchall()
 conn.close()
 
+twitbase = "https://twitter.com/RTWbike/status/%s"
+
 with open(input_html) as file:
     soup = BeautifulSoup(file.read())
     target = soup.find("table", id="distances")
     row = target.find("tr", id="raw-data").extract()
-    for i in ("fish-love-bikes", "cows-go-moo"):
-        a = i.split("-")
+    for i in row("td"): i.clear()
+    for d in distances:
         q = copy.deepcopy(row)
         tds = q("td")
-        tds[0].string = a[0]
-        tds[1].string = a[1]
-        tds[2].string = a[2]
+        tds[0].string = str(d[0])
+        tds[1].string = "%.1f" % (d[1])
+        twit_url = twitbase % (d[2])
+        twit_a = soup.new_tag("a", href=twit_url)
+        twit_a.string = str(d[2])
+        tds[2].append(twit_a)
         target.append(q)
     print(soup)
