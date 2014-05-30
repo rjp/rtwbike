@@ -10,25 +10,34 @@ output_html = input_html + ".new"
 
 conn = sqlite3.connect(dbfile)
 c = conn.cursor()
-c.execute("select date, distance, tweet_id  from distances")
+c.execute("select datetime(date), distance, tweet_id from distances order by date desc")
 distances = c.fetchall()
 conn.close()
 
 twitbase = "https://twitter.com/RTWbike/status/%s"
 
+def clone_row_with_dict(bsrow):
+    q = copy.deepcopy(bsrow)
+    tds = q("td")
+    a = {}
+    for i in tds:
+        i.clear()
+        a[i['id']] = i
+        del(i['id'])
+    return q, a
+
 with open(input_html) as file:
     soup = BeautifulSoup(file.read())
     target = soup.find("table", id="distances")
     row = target.find("tr", id="raw-data").extract()
-    for i in row("td"): i.clear()
     for d in distances:
-        q = copy.deepcopy(row)
+        q, a = clone_row_with_dict(row)
         tds = q("td")
-        tds[0].string = str(d[0])
-        tds[1].string = "%.1f" % (d[1])
+        a['row.utc'].string = str(d[0])
+        a['row.distance'].string = "%.1f" % (d[1])
         twit_url = twitbase % (d[2])
         twit_a = soup.new_tag("a", href=twit_url)
         twit_a.string = str(d[2])
-        tds[2].append(twit_a)
+        a['row.tweet'].append(twit_a)
         target.append(q)
     print(soup)
