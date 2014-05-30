@@ -5,8 +5,10 @@ import sqlite3
 
 # https://twitter.com/RTWbike/status/464626734521135105
 
-(me, dbfile, input_html) = sys.argv
-output_html = input_html + ".new"
+(me, dbfile, input_html) = sys.argv[:3]
+
+# I do not like green eggs and python's way of defaulting items from a list
+output_html = (sys.argv[3:] + [input_html + ".new"])[0]
 
 conn = sqlite3.connect(dbfile)
 c = conn.cursor()
@@ -40,4 +42,5 @@ with open(input_html) as file:
         twit_a.string = str(d[2])
         a['row.tweet'].append(twit_a)
         target.append(q)
-    print(soup)
+    with open(output_html, "w", encoding="utf-8") as output:
+        print(soup, file=output)
