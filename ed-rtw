@@ -19,7 +19,7 @@ python $bd/update-distances.py $bd/distances.db $bd/extra-distances.ssv
 
 # Output the tweets as JSON and HTML
 python $bd/db-to-json.py $bd/distances.db $bd/distances.json.new && mv -f $bd/distances.json.new $html/distances.json
-python $bd/update-html.py $db/distances.db $bd/index.html $bd/index.html.new && mv -f $bd/index.html.new $html/index.html
+python $bd/update-html.py $bd/distances.db $bd/index.html $bd/index.html.new && mv -f $bd/index.html.new $html/index.html
 
 (echo; date +'%s %c'; sqlite3 $bd/distances.db 'select distance from distances' | python ~/eddington.py) >> $bd/check.log 2>>$HOME/logs/ed-rtw.err
 
