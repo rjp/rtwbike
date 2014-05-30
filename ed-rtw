@@ -3,22 +3,23 @@
 set -x
 set -e
 
-bd=~/tmp/rtwbike
-html=~/www/live/coding/experiments/rtwbike/
+bd=$HOME/tmp/rtwbike
+html=$HOME/www/live/coding/experiments/rtwbike/
 
 cd $bd
 
 # Fetch the tweets into our text file
-twitter-archiver -o -s $bd @rtwbike
+twitter-archiver -o -i -s $bd @rtwbike
 
 # Insert the tweets into the database
 python $bd/tweets-to-db.py $bd/distances.db $bd/@rtwbike
 
 # Now we convert the tweets to distances
-python $bd/update-distances.py $bd/distances.db
+python $bd/update-distances.py $bd/distances.db $bd/extra-distances.ssv
 
-# Output the tweets as JSON
+# Output the tweets as JSON and HTML
 python $bd/db-to-json.py $bd/distances.db $bd/distances.json.new && mv -f $bd/distances.json.new $html/distances.json
+python $bd/update-html.py $db/distances.db $bd/index.html $bd/index.html.new && mv -f $bd/index.html.new $html/index.html
 
 (echo; date +'%s %c'; sqlite3 $bd/distances.db 'select distance from distances' | python ~/eddington.py) >> $bd/check.log 2>>$HOME/logs/ed-rtw.err
 
