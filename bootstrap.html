@@ -21,10 +21,18 @@
 
 <div class="container">
 <div class="starter-template">
-<h1>Distances, and the tweets they came from</h1>
+<h2>Data</h2>
+<p>
+<span id="repl.count"/> distances, from <span id="repl.min"/> to <span id="repl.max"/> miles.
+<br>
+<a href="distances.json">Latest JSON of @rtwbike's distances</a>.
+</p>
+</div>
+<div class="starter-template">
+<h2>Distances</h2>
 <div class="table-responsive">
      <table class="table table-striped">
-          <thead> <tr><th>UTC</th> <th style="max-width: 5em">Distance</th> <th style="min-width: 15em">Scale</th> <th>Tweet ID</th></tr> </thead>
+          <thead> <tr><th>UTC</th> <th style="max-width: 5em">Distance</th> <th style="min-width: 15em">Scale against <span id="repl.max"/> miles</th> <th>Tweet ID</th></tr> </thead>
 <tbody id="distances">
 <tr id="raw-data"><td id='row.utc'></td> <td id='row.distance'></td>
 <td id="row.progress"></td> <td id='row.tweet'></td></tr>
