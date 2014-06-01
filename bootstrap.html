@@ -8,6 +8,7 @@
 
     <!-- Bootstrap -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap-theme.min.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -23,9 +24,10 @@
 <h1>Distances, and the tweets they came from</h1>
 <div class="table-responsive">
      <table class="table table-striped">
-          <thead> <tr><th>UTC</th> <th>Distance</th> <th>Tweet ID</th></tr> </thead>
+          <thead> <tr><th>UTC</th> <th style="max-width: 5em">Distance</th> <th style="min-width: 15em">Scale</th> <th>Tweet ID</th></tr> </thead>
 <tbody id="distances">
-<tr id="raw-data"><td id='row.utc'></td> <td id='row.distance'></td> <td id='row.tweet'></td></tr>
+<tr id="raw-data"><td id='row.utc'></td> <td id='row.distance'></td>
+<td id="row.progress"></td> <td id='row.tweet'></td></tr>
 </tbody>
 </table></div>
 </div></div>
