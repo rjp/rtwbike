@@ -30,7 +30,7 @@ def clone_row_with_dict(bsrow):
 
 with open(input_html) as file:
     soup = BeautifulSoup(file.read())
-    target = soup.find("table", id="distances")
+    target = soup.find("tbody", id="distances")
     row = target.find("tr", id="raw-data").extract()
     for d in distances:
         q, a = clone_row_with_dict(row)
