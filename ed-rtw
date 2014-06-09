@@ -57,7 +57,7 @@ fi
 
 echo $edi > $bd/edi.new
 if ! diff -q $bd/edi $bd/edi.new; then
-	/home/rjp/bin/bashtweet.sh <<NEWTEXT
+	$bd/tweet-stdin.py <<NEWTEXT
 New Eddington for @rtwbike is $edi
 
 $f
@@ -65,7 +65,7 @@ NEWTEXT
 	echo "New Eddington for @rtwbike is $edi\n\n$f"
 	mv -f $bd/edi.new $bd/edi
 else
-	/home/rjp/bin/bashtweet.sh <<SAMETEXT
+	$bd/tweet-stdin.py <<SAMETEXT
 Eddington for @rtwbike stays at $edi
 
 $f
