@@ -14,8 +14,8 @@ apis = None
 with open(os.getenv('HOME', '/tmp') + '/.apis', encoding="utf-8") as file:
     apis = json.load(file)
 
-consumer_key=apis['twitter']['apps']['rtwapp']['api_key']
-consumer_secret=apis['twitter']['apps']['rtwapp']['api_secret']
+consumer_key=apis['twitter']['apps']['twitgames_4realz']['api_key']
+consumer_secret=apis['twitter']['apps']['twitgames_4realz']['api_secret']
 access_token=apis['twitter']['users'][user]['access_token']
 access_secret=apis['twitter']['users'][user]['access_secret']
 
@@ -24,4 +24,5 @@ twitter = Twython(consumer_key, consumer_secret, access_token, access_secret)
 try:
     twitter.update_status(status=tweet_this)
 except:
+    # print(sys.exc_info()[0])
     exit(1)
