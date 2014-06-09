@@ -21,4 +21,7 @@ access_secret=apis['twitter']['users'][user]['access_secret']
 
 twitter = Twython(consumer_key, consumer_secret, access_token, access_secret)
 
-twitter.update_status(status=tweet_this)
+try:
+    twitter.update_status(status=tweet_this)
+except:
+    exit(1)
