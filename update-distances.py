@@ -16,6 +16,12 @@ if len(sys.argv) > 2: extras = sys.argv[2]
 conn = sqlite3.connect(dbfile)
 c = conn.cursor()
 
+def eddington(distances):
+    en = 0
+    for index, distance in enumerate(sorted(distances, reverse=True)):
+        if distance >= index + 1: en = en + 1
+    return en
+
 # Some tweets have the wrong distances and we replace them
 overrides = {}
 c.execute("select tweet_id, distance from ignore_tweets")
@@ -39,3 +45,4 @@ if extras is not None:
             distance = distance.rstrip('\r\n')
             c.execute("insert or ignore into distances (tweet_id, distance, date) values (?,?,?)", [tweet_id, distance, tweet_date])
 conn.commit()
+
