@@ -17,9 +17,15 @@ python $bd/tweets-to-db.py $bd/distances.db $bd/@rtwbike
 # Now we convert the tweets to distances
 python $bd/update-distances.py $bd/distances.db $bd/extra-distances.ssv
 
+# Update the eddington table - this is a bulk replace, really
+python $bd/set-eddington.py $bd/distances.db
+
 # Output the tweets as JSON and HTML
 python $bd/db-to-json.py $bd/distances.db $bd/distances.json.new && mv -f $bd/distances.json.new $html/distances.json
+
+# Loopify this later
 python $bd/update-html.py $bd/distances.db $bd/index.html $bd/index.html.new && mv -f $bd/index.html.new $html/index.html
+python $bd/update-html.py $bd/distances.db $bd/dashboard.html $bd/dashboard.html.new && mv -f $bd/dashboard.html.new $html/dashboard.html
 
 (echo; date +'%s %c'; sqlite3 $bd/distances.db 'select distance from distances' | python ~/eddington.py) >> $bd/check.log 2>>$HOME/logs/ed-rtw.err
 
@@ -57,7 +63,7 @@ fi
 
 echo $edi > $bd/edi.new
 if ! diff -q $bd/edi $bd/edi.new; then
-	$bd/tweet-stdin.py <<NEWTEXT
+	$bd/tweet-stdin.py zimpenfish_r <<NEWTEXT
 New Eddington for @rtwbike is $edi
 
 $f
@@ -65,7 +71,7 @@ NEWTEXT
 	echo "New Eddington for @rtwbike is $edi\n\n$f"
 	mv -f $bd/edi.new $bd/edi
 else
-	$bd/tweet-stdin.py <<SAMETEXT
+	$bd/tweet-stdin.py zimpenfish_r <<SAMETEXT
 Eddington for @rtwbike stays at $edi
 
 $f
