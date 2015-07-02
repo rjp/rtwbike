@@ -79,3 +79,10 @@ SAMETEXT
 	echo -e "Eddington for @rtwbike stays at $edi\n\n$f"
 	rm -f $bd/edi.new
 fi
+
+PLOTICUS_PREFABS=/usr/local/share/ploticus_prefabs
+export PLOTICUS_PREFABS
+
+cd $HOME/tmp
+sqlite3 -csv $HOME/tmp/rtwbike/distances.db  "select distances,eddington from eddington" > ed.csv
+/usr/local/bin/pl -png -o $html/eddington.png -prefab scat data=ed.csv delim=comma x=1 y=2 xlbl="Rides (N=$distances)" ylbl="Eddington (E=$edi)" rectangle="1 1 8 4" ptsize=0.01
